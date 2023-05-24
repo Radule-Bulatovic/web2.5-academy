@@ -7,6 +7,7 @@ contract Raffle {
     event EnoughParticipants( uint participantNumber );
     event WinnerChosen( address winner, uint amount );
 
+    uint8 constant PRIZE_PERCENT = 80;
     uint256 internal ticketPrice;
     uint256 internal requiredParticipants;
     address internal immutable admin;
@@ -56,9 +57,9 @@ contract Raffle {
     function selectWinner() internal {
         isActive = false;
         address payable winner = payable(participants[0]);
-        uint256 prizeAmount = address(this).balance;
         participants = new address[](0);
 
+        uint256 prizeAmount = (address(this).balance * PRIZE_PERCENT) / 100;
         winner.transfer(prizeAmount);
         emit WinnerChosen(winner, prizeAmount);
     }
